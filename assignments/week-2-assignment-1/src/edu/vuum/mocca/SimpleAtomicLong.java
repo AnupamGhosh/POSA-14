@@ -23,7 +23,14 @@ class SimpleAtomicLong
     /**
      * The ReentrantReadWriteLock used to serialize access to mValue.
      */
+<<<<<<< HEAD
     // TODO - add the implementation
+=======
+
+    // TODO -- you fill in here by replacing the null with an
+    // initialization of ReentrantReadWriteLock.
+    private final ReentrantReadWriteLock mRWLock = new ReentrantReadWriteLock();
+>>>>>>> ba40a36685f0ab1847a71dc1fe5f0b6d47b18a78
 
     /**
      * Creates a new SimpleAtomicLong with the given initial value.
