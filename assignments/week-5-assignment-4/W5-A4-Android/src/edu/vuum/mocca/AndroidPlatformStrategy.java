@@ -19,7 +19,7 @@ public class AndroidPlatformStrategy extends PlatformStrategy
 {	
     /** TextViewVariable. */
     private TextView mTextViewOutput;
-	
+
     /** Activity variable finds gui widgets by view. */
     private WeakReference<Activity> mActivity;
 
@@ -45,8 +45,9 @@ public class AndroidPlatformStrategy extends PlatformStrategy
     /** Do any initialization needed to start a new game. */
     public void begin()
     {
-        /** (Re)initialize the CountDownLatch. */
+        /** Reset the CountDownLatch. */
         // TODO - You fill in here.
+    	mLatch = new CountDownLatch(2);
     }
 
     /** Print the outputString to the display. */
@@ -57,18 +58,49 @@ public class AndroidPlatformStrategy extends PlatformStrategy
          * and appends the outputString to a TextView. 
          */
         // TODO - You fill in here.
+    	Activity activity = mActivity.get();
+        if (activity != null) {
+        activity.runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                    mTextViewOutput.append(outputString + '\n');
+                   }
+               });
+        }
     }
 
     /** Indicate that a game thread has finished running. */
     public void done()
     {	
         // TODO - You fill in here.
+    	Activity activity = mActivity.get();
+        if (activity != null) {
+        activity.runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                    mLatch.countDown();
+                   }
+               });
+        }
     }
 
     /** Barrier that waits for all the game threads to finish. */
     public void awaitDone()
     {
         // TODO - You fill in here.
+    	try {
+    		mLatch.await();
+    	} 
+    	catch (InterruptedException e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    }
+
+    /** Returns the platform name in a String. */
+    public String platformName() 
+    {
+        return System.getProperty("java.specification.vendor");
     }
 
     /** 
